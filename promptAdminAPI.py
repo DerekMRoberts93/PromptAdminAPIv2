@@ -225,13 +225,13 @@ def addApp(appId,groupName,promptId,promptName,pin):
 
         #query to create new user
         named_params = {'app':appId, 'group':groupName, 'promptIdent':promptId, 'prompt':promptName, 'pinNumber':pin, 'boolVal':'false'}
-        query = 'INSERT INTO APPID_APPNAME (APP_ID, APP_NAME,AUTH_PIN) VALUES (:app,:group,:pinNumber)'
+        query = 'INSERT INTO APPID_APPNAME (APP_ID, APP_NAME,AUTH_PIN) VALUES (:app, :group, :pinNumber)'
         cur.execute(query,named_params)
-        con.commit()
-        query = 'INSERT INTO APPID_PROMPTID (APP_ID, PROMPT_ID, DESCRIPTION) VALUES (:app,:promptIdent,:prompt)'
+
+        query = 'INSERT INTO APPID_PROMPTID (APP_ID, PROMPT_ID, DESCRIPTION) VALUES (:app, :promptIdent, :prompt)'
         cur.execute(query,named_params)
-        con.commit()
-        query = 'INSERT INTO FCFO_STATUS (APP_ID, FORCE_CLOSE, FORCE_OPEN) VALUES (:app,:boolVal,:boolVal)'
+
+        query = 'INSERT INTO FCFO_STATUS (APP_ID, FORCE_CLOSE, FORCE_OPEN) VALUES (:app, :boolVal, :boolVal)'
         con.execute(query,named_params)
         con.commit()
 
