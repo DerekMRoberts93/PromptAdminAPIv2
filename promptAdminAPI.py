@@ -2,10 +2,31 @@ import cx_Oracle
 import ldap
 import json
 import config
+import xml.etree.ElementTree as ET
 from flask import Flask
+from flask import jsonify
 
 app = Flask(__name__)
 
+
+def generateSingleXML(myStr,tag):
+    return "<"+tag+">"+myStr+"</"+tag+">"
+
+def generateListXML(myList,tag1,tag2):
+    xmlString = ""
+    xmlString = "<"+tag1+">"
+    for item in myList:
+        xmlString = xmlString + "\n" + "<"+tag2+">"+item+"</"+tag2+">"
+
+    xmlString = xmlString + "\n" + "</"+tag1+">"
+    return xmlString
+
+def stringCleaner(myString):
+    myString = myString.replace("(","")
+    myString = myString.replace(")","")
+    myString = myString.replace("\'","")
+    myString = myString.replace(",","")
+    return myString
 
 def listCleaner(myList):
     cleanedList = []
@@ -40,28 +61,55 @@ def establishDBConnection():
 
 @app.route("/getPrompts/<string:appId>")
 def getPrompts(appId):
-    establishDBConnection()
+    #start connection to Oracle database
     con = cx_Oracle.connect(establishDBConnection())
     cur = con.cursor()
+    #return PIN from database that matches the entered app id
     cur.execute('select AUTH_PIN from APPID_APPNAME where APP_ID ='+appId)
-    results = []
-    results.append(appId)
-    for member in cur:
-        results.append(str(member))
 
+    #grabs pin form sql query result
+    pin = ""
+    for item in cur:
+        pin = str(item)
+    pin = stringCleaner(pin)
+
+    #query to grab all prompt ids associated with the app id
     cur.execute('select PROMPT_ID from APPID_PROMPTID where APP_ID ='+appId)
+    prompts = []
     for member in cur:
-        results.append(str(member))
+        prompts.append(str(member))
+    #close oracle connections
     cur.close()
     con.close()
-    results = listCleaner(results)
-    js = json.dumps(results)
-    return js
+    prompts = listCleaner(prompts)
 
+    #generate xml file
+    promptsXml = generateListXML(prompts,"prompts","prompt")
+    appIdXml = generateSingleXML(appId,"appID")
+    pinXml = generateSingleXML(pin,"pin")
+    responseXml = "<getPrompts>\n" + appIdXml + "\n" + pinXml + "\n" + promptsXml + "\n</getprompts>"
+    return responseXml
+
+@app.route("/changePin/<string:appId>/<string:newPin>")
+def changePin(appId,newPin):
+    #start oracle connection
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #query to set pin
+    query = 'UPDATE APPID_APPNAME SET AUTH_PIN = '+newPin+' WHERE APP_ID ='+appId
+    cur.execute(query)
+    con.commit()
+
+    #close oracle connections
+    cur.close()
+    con.close()
+
+    return generateSingleXML("success","response")
 
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
 
 
