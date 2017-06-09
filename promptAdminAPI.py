@@ -109,7 +109,82 @@ def changePin(appId,newPin):
 
 
 
-if __name__ == "__main__":
+@app.route("/addPrompt/<string:appId>/<string:promptId>/<string:promptName>")
+def addPrompt(appId,promptId,promptName):
+    #start oracle connection
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #query to add new prompt
+    named_params = {'app':appId, 'prompt':promptId, 'name':promptName}
+    query = 'INSERT INTO APPID_PROMPTID (APP_ID,PROMPT_ID,DESCRIPTION) VALUES (:app, :prompt, :name)'
+    cur.execute(query, named_params)
+    con.commit()
+
+    #close connections
+    cur.close()
+    con.close()
+
+    return generateSingleXML("success","response")
+
+
+@app.route("/changeGroupName/<string:appId>/<string:groupName>")
+def changeGroupName(appId,groupName):
+    #start oracle connection
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #query to change group name
+    named_params = {'newName':groupName}
+    query = 'UPDATE APPID_APPNAME SET APP_NAME =:newName WHERE APP_ID ='+appId
+    cur.execute(query,named_params)
+    con.commit()
+
+    #close oracle connections
+    cur.close()
+    con.close()
+
+    return generateSingleXML("success","response")
+
+@app.route("/setFc/<string:appId>/<string:boolean>")
+def setFc(appId,boolean):
+    #start oracle connection
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #query to update fc
+    named_params = {'boolVal':boolean}
+    query = 'UPDATE FCFO_STATUS SET FORCE_CLOSE =:boolVal WHERE APP_ID = '+appId
+    cur.execute(query,named_params)
+    con.commit()
+
+    #close oracle connections
+    cur.close()
+    con.close()
+
+    return generateSingleXML("success","response")
+
+@app.route("/setFo/<string:appId>/<string:boolean>")
+def setFo(appId,boolean):
+    #start oracle connection
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #query to update fc
+    named_params = {'boolVal':boolean}
+    query = 'UPDATE FCFO_STATUS SET FORCE_OPEN =:boolVal WHERE APP_ID = '+appId
+    cur.execute(query,named_params)
+    con.commit()
+
+    #close oracle connections
+    cur.close()
+    con.close()
+
+    return generateSingleXML("success","response")
+
+
+
+if  __name__ == "__main__":
     app.run(host='0.0.0.0')
 
 
