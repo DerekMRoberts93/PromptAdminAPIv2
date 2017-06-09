@@ -268,6 +268,54 @@ def returnAll():
 
 
 
+@app.route("/deletePrompt/<string:promptId>")
+def promptId(promptId):
+    #connect to oracle
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #query to delete prompt
+    named_params = {'id':promptId}
+    query = 'DELETE FROM APPID_PROMPTID WHERE PROMPT_ID =:id'
+    cur.execute(query,named_params)
+    con.commit()
+
+
+    #end connections
+    cur.close()
+    con.close()
+    return generateSingleXML("success","response")
+
+
+
+
+@app.route("/deleteApp/<string:appId>")
+def deleteApp(appId):
+    #connect to oracle
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #queries to delete
+    named_params = {'app':appId}
+    query = 'DELETE FROM APPID_APPNAME WHERE APP_ID =:app'
+    cur.execute(query, named_params)
+
+    query = 'DELETE FROM FCFO_STATUS WHERE APP_ID =:app'
+    cur.execute(query,named_params)
+
+    query = 'DELETE FROM APPID_PROMPTID WHERE APP_ID =:app'
+    cur.execute(query,named_params)
+    con.commit()
+
+
+    #end connections
+    cur.close()
+    con.close()
+
+    return generateSingleXML("success","response")
+
+
+
 
 if  __name__ == "__main__":
     app.run(host='0.0.0.0')
