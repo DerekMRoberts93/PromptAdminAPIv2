@@ -9,6 +9,21 @@ from flask import jsonify
 app = Flask(__name__)
 
 
+
+
+def generateNestedListXML(myList):
+    xmlResponse = []
+    count = 1
+    for item in myList:
+        xmlString = ""
+        xmlString = xmlString + "<appdata>\n"
+        xmlString = xmlString + "\t<appid>"+item[0]+"</appid>\n\t<appname>"+item[1]+"</appname>\n\t<pin>"+item[2]+"</pin>\n\t<forceclose>"+item[3]+"</forceclose>\n\t<forceopen>"+item[4]+"</forceopen>\n"
+        xmlString = xmlString + "</appdata>\n"
+        xmlResponse.append(xmlString)
+
+
+    return xmlResponse
+
 def generateSingleXML(myStr,tag):
     return "<"+tag+">"+myStr+"</"+tag+">"
 
@@ -207,6 +222,50 @@ def addApp(appId,groupName,promptId,promptName,pin):
     con.close()
 
     return generateSingleXML("success","response")
+
+
+@app.route("/returnAll")
+def returnAll():
+    #start oracle connection
+    con = cx_Oracle.connect(establishDBConnection())
+    cur = con.cursor()
+
+    #query to natural join FCFO_STATUS and APPID_APPNAME
+    query = ('SELECT * FROM APPID_APPNAME NATURAL JOIN FCFO_STATUS')
+    cur.execute(query)
+    applications = []
+    for app in cur:
+        temp = str(app).split(",")
+        temp =  listCleaner(temp)
+        applications.append(temp)
+
+    #query to retrieve prompts for each app
+    appDataXml = generateNestedListXML(applications)
+    promptDataXml = []
+    for app in applications:
+        promptQuery = 'SELECT PROMPT_ID, DESCRIPTION FROM APPID_PROMPTID WHERE APP_ID = '+app[0]
+        cur.execute(promptQuery)
+        promptXml = "<prompts>\n"
+        for item in cur:
+            temp = str(item).split(",")
+            temp = listCleaner(temp)
+            promptXml = promptXml + "\t<prompt>\n\t\t<promptid>"+temp[0]+"</promptid>\n\t\t<promptname>"+temp[1]+"</promptname>\n\t</prompt>\n"
+        promptXml = promptXml + "</prompts>\n"
+        promptDataXml.append(promptXml)
+
+    #merge xml for app and prompt data
+    combinedXml = "<data>\n"
+    for app, prompt in zip(appDataXml,promptDataXml):
+        combinedXml = combinedXml +"<appobject>\n"+ app + prompt +"</appobject>\n"
+    combinedXml = combinedXml + "</data>\n"
+
+
+    #close connections
+    cur.close()
+    con.close()
+
+    return combinedXml
+
 
 
 
