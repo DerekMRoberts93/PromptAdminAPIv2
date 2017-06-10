@@ -224,15 +224,17 @@ def addApp(appId,groupName,promptId,promptName,pin):
         cur = con.cursor()
 
         #query to create new user
-        named_params = {'app':appId, 'group':groupName, 'promptIdent':promptId, 'prompt':promptName, 'pinNumber':pin, 'boolVal':'false'}
-        query = 'INSERT INTO APPID_APPNAME (APP_ID, APP_NAME,AUTH_PIN) VALUES (:app, :group, :pinNumber)'
+        named_params = {'app':appId, 'groupN':groupName, 'pinNumber':pin}
+        query = 'INSERT INTO APPID_APPNAME (APP_ID, APP_NAME,AUTH_PIN) VALUES (:app, :groupN, :pinNumber)'
         cur.execute(query,named_params)
 
-        query = 'INSERT INTO APPID_PROMPTID (APP_ID, PROMPT_ID, DESCRIPTION) VALUES (:app, :promptIdent, :prompt)'
-        cur.execute(query,named_params)
+        named_params_two = {'appID':appId, 'promptIdent':promptId, 'prompt':promptName}
+        query = 'INSERT INTO APPID_PROMPTID (APP_ID, PROMPT_ID, DESCRIPTION) VALUES (:appID, :promptIdent, :prompt)'
+        cur.execute(query,named_params_two)
 
-        query = 'INSERT INTO FCFO_STATUS (APP_ID, FORCE_CLOSE, FORCE_OPEN) VALUES (:app, :boolVal, :boolVal)'
-        con.execute(query,named_params)
+        named_params_three = {'application':appId, 'boolVal':'false'}
+        query = 'INSERT INTO FCFO_STATUS (APP_ID, FORCE_CLOSE, FORCE_OPEN) VALUES (:application, :boolVal, :boolVal)'
+        cur.execute(query,named_params_three)
         con.commit()
 
         #close connections
