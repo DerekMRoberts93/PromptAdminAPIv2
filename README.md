@@ -38,27 +38,34 @@ into your own list using a for loop. See code for more details
 anything that isn't a number. For this reason, you should pass all parameters to a dictionary and then access them through the dictionary in your queries in order
 to preserve formattig and avoid unintended errors. this can be done in the following manner:  
 Basic setup:
-```
+```python
 @app.route(/getPrompt/<string:appId>)
 def getPrompt(appId):
     con = cx_Oracle.connect(EstablishDBConnection())
     cur = con.cursor()
 ```    
-    Pass parameter to dictionary:  
 
-```    
+Pass parameter to dictionary:  
+
+
+```python    
     named_params = {'app':appId}
 ```
-    Create a query referencing the dictionary. This is done by putting a colon followed by the name given in the distionary:  
 
-```    
+Create a query referencing the dictionary. This is done by putting a colon followed by the name given in the distionary:  
+
+
+```python    
     query = 'SELECT * FROM FCFO_STATUS WHERE APP_ID =:app'
-```    
-    Finally, we must pass in the query and dictionary to the cursor.execute() function for it to behave properly:  
+```
 
-```    
+Finally, we must pass in the query and dictionary to the cursor.execute() function for it to behave properly:  
+
+
+```python    
     cur.execute(query,named_params)
 ```
+
 What we have just done is used the oracle binding notation substitute in variables from our dictionary to our query. This allows us to preserver formatting and protect against SQL injection.
 
 ## Documentation(basic):
