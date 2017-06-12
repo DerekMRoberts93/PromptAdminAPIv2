@@ -9,8 +9,10 @@
 4. ldap3 (should already be installed)
 5. make sure a config.py file is created containing the username and password for the oracle db.
 your config.py file should look as follows:
+```
     username = **********
     password =  *********
+```
 (be sure to replace stars with actual username and password)
 
 all python dependencies should be installed using pip. If unavailable get a system admin to install it on the desired server. Additionally, the servers this will be implemented on
