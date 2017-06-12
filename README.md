@@ -1,6 +1,8 @@
 # New Prompt Admin API built in python
 
-Python Dependencies:
+## Dependencies
+
+### Python Dependencies:
 1. Flask
 2. Django
 3.cx_Oracle
@@ -15,11 +17,13 @@ all python dependencies should be installed using pip. If unavailable get a syst
 will most likely run python 2.6. because of this make sure you use pip to install the correct version. a quick google search will explain how to use pip and select
 specific version numbers in detail
 
-Additional dependencies (you should only check these if the initial deployment fails. they should already be installed on the target server)
+### Additional dependencies
+(you should only check these if the initial deployment fails. they should already be installed on the target server)
+
 1. Oracle Instant Client (necessary to connect to any oracle DB)
 
 
-Notes on cx_Oracle module:
+## Notes on cx_Oracle module:
 due to the fact that the oracle database moves periodically, its location is tracked through LDAP. I created a function called establishDBConnection that queries the appropriate LDAP server and
 returns the connection string need for cx_Oracle to establish a connection with the data base.
 
@@ -45,7 +49,7 @@ def getPrompt(appId):
     cur.execute(query,named_params)
 ```
 
-Documentation(basic):
+## Documentation(basic):
 [get] getPrompts
 route: /getPrompts/appID (example: /getPrompts/22222)
 takes: five digit appId
