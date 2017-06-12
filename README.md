@@ -31,6 +31,7 @@ into your own list using a for loop. See code for more details
 2. passing parameters directly to the query in the cursor object is not a good idea. The cursor object tends to make everything uppercase and causes problems with
 anything that isn't a number. For this reason, you should pass all parameters to a dictionary and then access them through the dictionary in your queries in order
 to preserve formattig and avoid unintended errors. this can be done in the following manner:
+```
 @app.route(/getPrompt/<string:appId>)
 def getPrompt(appId):
     #basic connection setup
@@ -42,7 +43,7 @@ def getPrompt(appId):
     query = 'SELECT * FROM FCFO_STATUS WHERE APP_ID =:app'
     #finally we must pass in the query and dictionary to the cursor.execute() function for it to behave properly
     cur.execute(query,named_params)
-
+```
 
 Documentation(basic):
 [get] getPrompts
