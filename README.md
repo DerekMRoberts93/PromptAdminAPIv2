@@ -10,8 +10,8 @@
 5. make sure a config.py file is created containing the username and password for the oracle db.
 your config.py file should look as follows:
 ```
-    username = **********
-    password =  *********
+    username = '**********'
+    password =  '*********'
 ```
 (be sure to replace stars with actual username and password)
 
