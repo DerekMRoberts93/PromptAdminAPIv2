@@ -15,7 +15,7 @@ your config.py file should look as follows:
 ```
 (be sure to replace stars with actual username and password)
 
-all python dependencies should be installed using pip. If unavailable get a system admin to install it on the desired server. Additionally, the servers this will be implemented on
+All python dependencies should be installed using pip. If unavailable get a system admin to install it on the desired server. Additionally, the servers this will be implemented on
 will most likely run python 2.6. because of this make sure you use pip to install the correct version. a quick google search will explain how to use pip and select
 specific version numbers in detail
 
@@ -26,7 +26,7 @@ specific version numbers in detail
 
 
 ## Notes on cx_Oracle module:
-due to the fact that the oracle database moves periodically, its location is tracked through LDAP. I created a function called establishDBConnection that queries the appropriate LDAP server and
+Due to the fact that the oracle database moves periodically, its location is tracked through LDAP. I created a function called establishDBConnection that queries the appropriate LDAP server and
 returns the connection string need for cx_Oracle to establish a connection with the data base.
 
 The cursor object in the cx_Oracle module is what allows you to run queries against the data base. A few things tonote about the cursor object:
@@ -36,20 +36,27 @@ into your own list using a for loop. See code for more details
 
 2. passing parameters directly to the query in the cursor object is not a good idea. The cursor object tends to make everything uppercase and causes problems with
 anything that isn't a number. For this reason, you should pass all parameters to a dictionary and then access them through the dictionary in your queries in order
-to preserve formattig and avoid unintended errors. this can be done in the following manner:
+to preserve formattig and avoid unintended errors. this can be done in the following manner:  
+Basic setup:
 ```
 @app.route(/getPrompt/<string:appId>)
 def getPrompt(appId):
-    #basic connection setup
     con = cx_Oracle.connect(EstablishDBConnection())
     cur = con.cursor()
-    #pass parameter to dictionary
+```    
+    Pass parameter to dictionary:
+```    
     named_params = {'app':appId}
-    #create query referencing the dictionary. this is done by putting a colon followed by the name given in the distionary
+```
+    Create a query referencing the dictionary. This is done by putting a colon followed by the name given in the distionary:
+```    
     query = 'SELECT * FROM FCFO_STATUS WHERE APP_ID =:app'
-    #finally we must pass in the query and dictionary to the cursor.execute() function for it to behave properly
+```    
+    Finally, we must pass in the query and dictionary to the cursor.execute() function for it to behave properly:
+```    
     cur.execute(query,named_params)
 ```
+What we have just done is used the oracle binding notation substitute in variables from our dictionary to our query. This allows us to preserver formatting and protect against SQL injection.
 
 ## Documentation(basic):
 ### [get] getPrompts
