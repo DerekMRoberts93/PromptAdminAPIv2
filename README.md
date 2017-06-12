@@ -51,54 +51,54 @@ def getPrompt(appId):
 
 ## Documentation(basic):
 ### [get] getPrompts
-route: /getPrompts/appID (example: /getPrompts/22222)
-takes: five digit appId
+route: /getPrompts/appID (example: /getPrompts/22222)  
+takes: five digit appId  
 returns: appId, pin, and associated prompts for the given appId in XML format
 
 ### [get] returnEverything
-route: /returnEverything (example: /returnEverything)
-takes: nothing
+route: /returnEverything (example: /returnEverything)  
+takes: nothing  
 returns: all apps, prompts, pins, fcfo statuses in XML format (essentially returns all DB info)
 
 
 ### [put] changePin
-route: /changePin/appId/newPin (example: /changePin/22222/456789)
-takes: 5-digit appId and 6-digit pin
+route: /changePin/appId/newPin (example: /changePin/22222/456789)  
+takes: 5-digit appId and 6-digit pin  
 returns: success or failure in XML format
 
 ### [put] changeGroupName
-route: /changeGroupName (example: /changeGroupName/22222/myNewGroup)
-takes:  5-digit appId and a new groupName
+route: /changeGroupName (example: /changeGroupName/22222/myNewGroup)  
+takes:  5-digit appId and a new groupName  
 returns: success or failure in XML format
 
 ### [put] setFc
-route: /setFc/appId/bool (example: /setFc/22222/true)
-takes: 5-digit app id and the string 'true' or 'false'
+route: /setFc/appId/bool (example: /setFc/22222/true)  
+takes: 5-digit app id and the string 'true' or 'false'  
 returns: success or failure in XML format
 
 ### [put] setFo
-route: /setFo/appId/bool (example: /setFo/22222/true)
-takes: 5-digit appId and the string 'true' or 'false'
+route: /setFo/appId/bool (example: /setFo/22222/true)  
+takes: 5-digit appId and the string 'true' or 'false'  
 returns: success or failure in XML format
 
 
 ### [post] addApp
-route: /addApp/appId/groupName/promptId/promptName/pin
-takes: 5-digit appId, groupname, 5-digit promptId, promptName, and 6-digit pin (promptId and appId must be unique from all other entries)
+route: /addApp/appId/groupName/promptId/promptName/pin  
+takes: 5-digit appId, groupname, 5-digit promptId, promptName, and 6-digit pin (promptId and appId must be unique from all other entries)  
 returns: success or failure in XML format
 
 ### [post] addPrompt
-route: /addPrompt/appId/newPromptId/promptName (example: /addPrompt/22222/96369/newPrompt)
-takes: 5-digit appId (from an existing app) and a 5-digit promptId as well as a new prompt name
+route: /addPrompt/appId/newPromptId/promptName (example: /addPrompt/22222/96369/newPrompt)  
+takes: 5-digit appId (from an existing app) and a 5-digit promptId as well as a new prompt name  
 returns: success or failure in xml
 
 
 ### [delete] deleteApp
-route: /deleteApp/appId (example: /deleteApp/22222)
-takes: 5-digit appId
+route: /deleteApp/appId (example: /deleteApp/22222)  
+takes: 5-digit appId  
 returns: success or failure in XML format
 
 ### [delete] deletePrompt
-route: /deletePrompt/promptId (example: /deletePrompt/96369)
-takes: 5-digit promptId
+route: /deletePrompt/promptId (example: /deletePrompt/96369)  
+takes: 5-digit promptId  
 returns: success or failure in XML format
