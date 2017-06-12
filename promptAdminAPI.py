@@ -82,7 +82,8 @@ def getPrompts(appId):
         con = cx_Oracle.connect(establishDBConnection())
         cur = con.cursor()
         #return PIN from database that matches the entered app id
-        cur.execute('select AUTH_PIN from APPID_APPNAME where APP_ID ='+appId)
+        named_params = {'app':appId}
+        cur.execute('select AUTH_PIN from APPID_APPNAME where APP_ID =:app',named_params)
 
         #grabs pin form sql query result
         pin = ""
@@ -91,7 +92,7 @@ def getPrompts(appId):
         pin = stringCleaner(pin)
 
         #query to grab all prompt ids associated with the app id
-        cur.execute('select PROMPT_ID from APPID_PROMPTID where APP_ID ='+appId)
+        cur.execute('select PROMPT_ID from APPID_PROMPTID where APP_ID =:app',named_params)
         prompts = []
         for member in cur:
             prompts.append(str(member))
@@ -117,8 +118,9 @@ def changePin(appId,newPin):
         cur = con.cursor()
 
         #query to set pin
-        query = 'UPDATE APPID_APPNAME SET AUTH_PIN = '+newPin+' WHERE APP_ID ='+appId
-        cur.execute(query)
+        named_params = {'app':appId, 'pin':newPin}
+        query = 'UPDATE APPID_APPNAME SET AUTH_PIN =:pin WHERE APP_ID =:app'
+        cur.execute(query,named_params)
         con.commit()
 
         #close oracle connections
