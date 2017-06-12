@@ -44,15 +44,18 @@ def getPrompt(appId):
     con = cx_Oracle.connect(EstablishDBConnection())
     cur = con.cursor()
 ```    
-    Pass parameter to dictionary:
+    Pass parameter to dictionary:  
+
 ```    
     named_params = {'app':appId}
 ```
-    Create a query referencing the dictionary. This is done by putting a colon followed by the name given in the distionary:
+    Create a query referencing the dictionary. This is done by putting a colon followed by the name given in the distionary:  
+
 ```    
     query = 'SELECT * FROM FCFO_STATUS WHERE APP_ID =:app'
 ```    
-    Finally, we must pass in the query and dictionary to the cursor.execute() function for it to behave properly:
+    Finally, we must pass in the query and dictionary to the cursor.execute() function for it to behave properly:  
+
 ```    
     cur.execute(query,named_params)
 ```
